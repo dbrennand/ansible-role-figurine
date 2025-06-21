@@ -36,9 +36,11 @@
 
 ## install
 - block:
-    - name: Ensure unzip is installed
+    - name: Ensure unzip and tar are installed
       ansible.builtin.package:
-        name: unzip
+        name:
+          - unzip
+          - tar
         state: present
 
     - name: Set Arch
