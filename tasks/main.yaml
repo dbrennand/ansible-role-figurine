@@ -1,5 +1,4 @@
 ---
-
 ## check if installed and get latest version
 - name: check if figurine is installed already
   stat:
@@ -37,6 +36,11 @@
 
 ## install
 - block:
+    - name: Ensure unzip is installed
+      ansible.builtin.package:
+        name: unzip
+        state: present
+
     - name: Set Arch
       vars:
         arch_lut:
@@ -57,7 +61,7 @@
       set_fact:
         figurine_pkg_path: "v{{ figurine_ver }}/figurine_linux_{{ arch }}_v{{ figurine_ver }}.tar.gz"
       when: figurine_ver is version('1.2.0', '>')
-    
+
     - name: Extract figurine download into install path
       unarchive:
         remote_src: true
@@ -67,7 +71,6 @@
         extra_opts: [--strip-components=1]
 
   when: figurine_is_installed == False or ( figurine_is_installed == True and figurine_download_latest_ver == True and installed_version_registered.stdout != figurine_ver ) or ( figurine_is_installed == True and figurine_download_latest_ver == False and installed_version_registered.stdout != figurine_pinned_ver )
-
 
 ## configurine
 - name: configure login
